@@ -42,7 +42,7 @@ You can install the dependencies using
 pip install -r requirements.txt
 ```
 
-### Use with ollama
+### Use with Ollama
 You need to download ollama from from https://ollama.com/.
 
 Then you need to start the ollama server either from ollama app
@@ -60,6 +60,41 @@ ollama pull llama3:8b # use llama3:8b for example
 ```
 
 ollama can support CPU-only environment, so if you do not have CUDA environment
+
+### Use with HuggingFace Models
+
+ASB also supports loading open-source models directly from HuggingFace Hub. No additional setup is required beyond the base installation.
+
+#### Basic Setup
+
+For public models, simply specify the model path in your configuration file:
+
+```yaml
+llms:
+  - microsoft/Phi-3-mini-4k-instruct
+  - mistralai/Mistral-7B-Instruct-v0.2
+```
+
+#### For Gated Models (Optional)
+
+Some models (like Meta's Llama) require authentication. Set up your HuggingFace token:
+
+```bash
+# Add to .env file
+echo "HF_AUTH_TOKENS=your_huggingface_token_here" >> .env
+```
+
+Get your token from: https://huggingface.co/settings/tokens
+
+#### Example Configuration
+
+See `config/huggingface_example.yml` for a complete example, or check the [detailed HuggingFace guide](docs/HUGGINGFACE_MODELS.md) for more information.
+
+```bash
+python scripts/agent_attack.py --cfg_path config/huggingface_example.yml
+```
+
+**Note**: HuggingFace models require sufficient GPU memory. For 7B models, we recommend at least 16GB VRAM
 
 
 
@@ -79,15 +114,18 @@ python scripts/agent_attack_pot.py # PoT backdoor attack
 ### Customizable Arguments
 
 The customizable arguments are stored in YAML files in `config/`.
-Please list the arguments you want to evaluate in a run. For example, if you want to run **GPT-4o** and **LLaMA3.1-70B** at the same time, you should set llms in the following format in YAML files.
-```
+Please list the arguments you want to evaluate in a run. For example, if you want to run **GPT-4o**, **LLaMA3.1-70B (Ollama)**, and **Mistral-7B (HuggingFace)** at the same time, you should set llms in the following format in YAML files.
+```yaml
 llms:
-  - gpt-4o-2024-08-06
-  - ollama/llama3.1:70b
+  - gpt-4o-2024-08-06                      # API Model
+  - ollama/llama3.1:70b                    # Ollama Model
+  - mistralai/Mistral-7B-Instruct-v0.2     # HuggingFace Model
 ```
 
 ### Available LLMs in ASB
 Here are the open-source and closed-source LLMs we used in ASB.
+
+#### Via Ollama (requires Ollama installation)
 
 | **LLM**               |**YAML Argument**| **Source**| **#Parameters** | **Provider**   |
 |-----------------------|----|-------------|---------|-------|
@@ -100,6 +138,24 @@ Here are the open-source and closed-source LLMs we used in ASB.
 | <div align="center">**Mixtral-8x7B**</div>   |<div align="center">ollama/mixtral:8x7b</div>  | <div align="center">Open</div>    | <div align="center">56B</div>             | <div align="center"><img src="./images/mistral.webp" width="100"/></div>     |
 | <div align="center">**Qwen2-7B**</div>   | <div align="center">ollama/qwen2:7b</div>   | <div align="center">Open</div>    | <div align="center">7B</div>              | <div align="center"><img src="./images/alibaba.svg" width="100"/></div>        |
 | <div align="center">**Qwen2-72B**</div>   | <div align="center">ollama/qwen2:72b</div>  | <div align="center">Open</div>    | <div align="center">72B</div>             | <div align="center"><img src="./images/alibaba.svg" width="100"/></div>        |
+
+#### Via HuggingFace (direct loading from HuggingFace Hub)
+
+Any model from HuggingFace Hub can be used. Here are some examples:
+
+| **LLM**               |**YAML Argument**| **Source**| **#Parameters** | **Provider**   |
+|-----------------------|----|-------------|---------|-------|
+| <div align="center">**Phi-3-mini**</div> | <div align="center">microsoft/Phi-3-mini-4k-instruct</div> | <div align="center">Open</div> | <div align="center">3.8B</div> | <div align="center">Microsoft</div> |
+| <div align="center">**Mistral-7B**</div> | <div align="center">mistralai/Mistral-7B-Instruct-v0.2</div> | <div align="center">Open</div> | <div align="center">7B</div> | <div align="center"><img src="./images/mistral.webp" width="100"/></div> |
+| <div align="center">**Llama-2-7B**</div> | <div align="center">meta-llama/Llama-2-7b-chat-hf</div> | <div align="center">Open*</div> | <div align="center">7B</div> | <div align="center"><img src="./images/meta.svg" width="100"/></div> |
+| <div align="center">**Qwen2-7B**</div> | <div align="center">Qwen/Qwen2-7B-Instruct</div> | <div align="center">Open</div> | <div align="center">7B</div> | <div align="center"><img src="./images/alibaba.svg" width="100"/></div> |
+
+*Requires HuggingFace token and license acceptance. See [HuggingFace Models Guide](docs/HUGGINGFACE_MODELS.md) for details.
+
+#### Via API (closed-source models)
+
+| **LLM**               |**YAML Argument**| **Source**| **#Parameters** | **Provider**   |
+|-----------------------|----|-------------|---------|-------|
 | <div align="center">**Claude-3.5 Sonnet**</div> |<div align="center">claude-3-5-sonnet-20240620</div> |  <div align="center">Closed</div>  | <div align="center">180B</div>            | <div align="center"><img src="./images/anthropic.svg" width="300"/></div>      |
 | <div align="center">**GPT-3.5 Turbo**</div> | <div align="center">gpt-3.5-turbo</div>  |  Closed  | <div align="center">154B</div>            | <div align="center"><img src="./images/openai.svg" width="100"/></div>         |
 | <div align="center">**GPT-4o**</div>   | <div align="center">gpt-4o-2024-08-06</div>      |  <div align="center">Closed</div>   | <div align="center">8T</div>            | <div align="center"><img src="./images/openai.svg" width="100"/></div>         |
