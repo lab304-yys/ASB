@@ -29,8 +29,9 @@ if __name__ == '__main__':
                             llm_name = llm.split('/')[-1]
                             backend='ollama'
                         else:
-                            llm_name = llm.split('/')[-1]
-                            backend='vllm'
+                            # HuggingFace models (e.g., meta-llama/Llama-2-7b-chat-hf)
+                            llm_name = llm.split('/')[-1] if '/' in llm else llm
+                            backend=None
 
                         log_path = f'logs/{injection_method}/{llm_name}'
 

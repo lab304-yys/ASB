@@ -117,13 +117,17 @@ python scripts/agent_attack.py --cfg_path config/huggingface_example.yml
 
 ### 与 Ollama 的区别
 
-| 特性 | Ollama | HuggingFace |
-|------|---------|-------------|
-| 模型格式 | 使用 `ollama/model:tag` | 使用 `username/model-name` |
-| 安装要求 | 需要安装 Ollama | 仅需 transformers 库 |
-| 模型管理 | 通过 `ollama pull` | 自动下载 |
-| GPU 使用 | Ollama 管理 | 由 transformers 自动管理 |
-| 内存优化 | Ollama 优化 | 标准 PyTorch 加载 |
+| 特性 | Ollama | HuggingFace | vLLM (高级) |
+|------|---------|-------------|------------|
+| 模型格式 | 使用 `ollama/model:tag` | 使用 `username/model-name` | 使用 `username/model-name` |
+| 安装要求 | 需要安装 Ollama | 仅需 transformers 库 | 需要安装 vllm 库 |
+| 模型管理 | 通过 `ollama pull` | 自动下载 | 自动下载 |
+| GPU 使用 | Ollama 管理 | 由 transformers 自动管理 | vLLM 优化推理 |
+| 内存优化 | Ollama 优化 | 标准 PyTorch 加载 | 高度优化（PagedAttention） |
+| 推理速度 | 中等 | 标准 | 最快 |
+| 使用场景 | 简单部署 | 标准使用 | 生产环境/高吞吐 |
+
+**注意**: 如果您需要使用 vLLM 后端以获得更快的推理速度，请在命令行中指定 `--use_backend vllm`。
 
 ---
 
@@ -240,10 +244,14 @@ Here are some recommended open-source models that can be used directly in ASB:
 
 ### Differences from Ollama
 
-| Feature | Ollama | HuggingFace |
-|---------|---------|-------------|
-| Model Format | Use `ollama/model:tag` | Use `username/model-name` |
-| Installation | Requires Ollama installation | Only needs transformers library |
-| Model Management | Via `ollama pull` | Automatic download |
-| GPU Usage | Managed by Ollama | Auto-managed by transformers |
-| Memory Optimization | Ollama optimized | Standard PyTorch loading |
+| Feature | Ollama | HuggingFace | vLLM (Advanced) |
+|---------|---------|-------------|-----------------|
+| Model Format | Use `ollama/model:tag` | Use `username/model-name` | Use `username/model-name` |
+| Installation | Requires Ollama installation | Only needs transformers library | Requires vllm library |
+| Model Management | Via `ollama pull` | Automatic download | Automatic download |
+| GPU Usage | Managed by Ollama | Auto-managed by transformers | vLLM optimized inference |
+| Memory Optimization | Ollama optimized | Standard PyTorch loading | Highly optimized (PagedAttention) |
+| Inference Speed | Medium | Standard | Fastest |
+| Use Case | Simple deployment | Standard usage | Production/High throughput |
+
+**Note**: If you need to use vLLM backend for faster inference, specify `--use_backend vllm` in the command line.
