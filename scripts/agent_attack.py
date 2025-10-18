@@ -24,14 +24,14 @@ if __name__ == '__main__':
             for attack_type in attack_types:
                 if llm.startswith('gpt') or llm.startswith('gemini') or llm.startswith('claude'):
                     llm_name = llm
-                    backend=None
+                    backend='None'
                 elif llm.startswith('ollama'):
                     llm_name = llm.split('/')[-1]
                     backend='ollama'
                 else:
                     # HuggingFace models (e.g., meta-llama/Llama-2-7b-chat-hf)
                     llm_name = llm.split('/')[-1] if '/' in llm else llm
-                    backend=None
+                    backend='None'
 
                 log_path = f'logs/{injection_method}/{llm_name}'
                 database = f'memory_db/direct_prompt_injection/{attack_type}_gpt-4o-mini'
