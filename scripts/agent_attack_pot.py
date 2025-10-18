@@ -22,16 +22,18 @@ if __name__ == '__main__':
             for trigger in triggers:
                 for llm in llms:
                     for attack_type in attack_types:
+                        # Determine backend based on model type
+                        # Note: backend must be string 'None' (not Python None) for argparse compatibility
                         if llm.startswith('gpt') or llm.startswith('gemini') or llm.startswith('claude'):
                             llm_name = llm
-                            backend='None'
+                            backend='None'  # API models don't use a backend
                         elif llm.startswith('ollama'):
                             llm_name = llm.split('/')[-1]
                             backend='ollama'
                         else:
                             # HuggingFace models (e.g., meta-llama/Llama-2-7b-chat-hf)
                             llm_name = llm.split('/')[-1] if '/' in llm else llm
-                            backend='None'
+                            backend='None'  # HuggingFace uses default HfNativeLLM without backend
 
                         log_path = f'logs/{injection_method}/{llm_name}'
 
