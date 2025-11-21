@@ -1,0 +1,51 @@
+# Example configuration file for testing with HuggingFace models
+# 使用 HuggingFace 模型的示例配置文件
+
+injection_method: direct_prompt_injection
+attack_tool:
+  - all
+  # - agg
+  # - non-agg
+
+write_db: false # true,false
+
+llms:
+  # ========== HuggingFace Models (Open Source) ==========
+  # Directly use the model path from HuggingFace Hub
+  # 直接使用 HuggingFace Hub 上的模型路径
+  
+  # Small models (recommended for limited GPU memory)
+  # 小型模型（适合 GPU 内存有限的情况）
+  - microsoft/Phi-3-mini-4k-instruct  # 3.8B parameters
+  # - google/gemma-2-2b-it              # 2B parameters
+  
+  # Medium models (recommended for general use)
+  # 中型模型（推荐用于一般使用）
+  # - meta-llama/Llama-2-7b-chat-hf     # 7B parameters (requires HF token and license)
+  # - mistralai/Mistral-7B-Instruct-v0.2 # 7B parameters
+  # - Qwen/Qwen2-7B-Instruct            # 7B parameters
+  
+  # ========== API Models (Closed Source) ==========
+  # Uncomment if you have API keys configured
+  # 如果已配置 API 密钥，可以取消注释
+  # - gpt-4o-mini
+  # - gpt-3.5-turbo
+  # - gpt-4o-2024-08-06
+  # - claude-3-5-sonnet-20240620
+  
+  # ========== Ollama Models ==========
+  # Requires Ollama to be installed and running
+  # 需要安装并运行 Ollama
+  # - ollama/llama3:8b
+  # - ollama/qwen2:7b
+  # - ollama/gemma2:9b
+
+attack_types:
+  # - combined_attack
+  # - context_ignoring
+  - fake_completion
+  # - escape_characters
+  # - naive
+
+# defense_type: delimiters_defense # delimiters_defense, direct_paraphrase_defense, instructional_prevention
+# suffix: huggingface_test
